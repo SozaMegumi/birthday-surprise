@@ -20,44 +20,27 @@
       padding: 30px;
       border-radius: 20px;
       box-shadow: 0 0 20px rgba(0,0,0,0.4);
-      max-width: 800px;
-      width: 90%;
+      max-width: 700px;
     }
     .count {
       font-size: 3rem;
       font-weight: bold;
       margin: 20px 0;
     }
-    #reveal {
+    #revealCard {
       display: none;
       margin-top: 20px;
     }
     video {
       border-radius: 15px;
-      width: 70%;
-      max-width: 500px;
+      max-width: 100%;
       height: auto;
-      margin-bottom: 15px;
       box-shadow: 0 0 15px rgba(0,0,0,0.7);
     }
     .wish {
-      font-size: 1.3rem;
-      line-height: 1.6;
-      margin-top: 10px;
-    }
-    #playButton {
-      padding: 12px 25px;
-      font-size: 1.2em;
-      border: none;
-      border-radius: 25px;
-      background-color: #ff4081;
-      color: white;
-      cursor: pointer;
-      transition: 0.3s;
-      margin-bottom: 15px;
-    }
-    #playButton:hover {
-      background-color: #e91e63;
+      margin-top: 15px;
+      font-size: 1.2rem;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -65,14 +48,13 @@
  <div class="container">
     <h1>💖 Your Special Day 💖</h1>
     <div>Countdown</div>
-    <div id="count" class="count">00:00:05</div>
-    <p>When the countdown ends, your surprise will appear 🥰</p>
+    <div id="count" class="count">00:00:00</div>
+    <p>When the countdown ends, the surprise will reveal itself 🥰</p>
 
     <!-- Surprise area -->
-    <div id="reveal">
-      <button id="playButton">💖 Click Here for Your Surprise 💖</button><br>
+    <div id="revealCard">
       <video id="video" controls>
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        <source src="https://github.com/SozaMegumi/birthday-surprise/raw/refs/heads/main/lv_7551049651613470005_20250918182230.mp4" type="video/mp4">
         Your browser does not support video.
       </video>
       <div class="wish">
@@ -84,26 +66,40 @@
   </div>
 
   <script>
-    // TEST MODE: 5 seconds
-    let countdownTime = 5; 
-    const countdownEl = document.getElementById("count");
-    const reveal = document.getElementById("reveal");
+    // 🎯 TEST MODE: set countdown 30s dari sekarang
+    const targetDate = new Date(new Date().getTime() + 30 * 1000);
 
-    const intervalId = setInterval(() => {
-      countdownEl.innerHTML = "00:00:0" + countdownTime;
-      countdownTime--;
+    function updateCountdown() {
+      const now = new Date();
+      const distance = targetDate - now;
 
-      if (countdownTime < 0) {
+      if (distance <= 0) {
         clearInterval(intervalId);
-        countdownEl.innerHTML = "00:00:00";
-        reveal.style.display = "block";
+        document.getElementById("count").innerHTML = "00:00:00";
+        doReveal();
+        return;
       }
-    }, 1000);
 
-    // Button play video
-    document.getElementById("playButton").addEventListener("click", () => {
-      document.getElementById("video").play();
-    });
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("count").innerHTML =
+        (hours < 10 ? "0" : "") + hours + ":" +
+        (minutes < 10 ? "0" : "") + minutes + ":" +
+        (seconds < 10 ? "0" : "") + seconds;
+    }
+
+    function doReveal() {
+      document.getElementById("revealCard").style.display = "block";
+      const video = document.getElementById("video");
+      if (video) {
+        video.play().catch(err => console.log("Autoplay blocked:", err));
+      }
+    }
+
+    const intervalId = setInterval(updateCountdown, 1000);
+    updateCountdown();
   </script>
 </body>
 </html>
