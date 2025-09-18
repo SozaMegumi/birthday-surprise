@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🎉 Birthday Surprise 🎉</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1a2a6c, #1d91de, #000000);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .container {
+      text-align: center;
+      background: rgba(0,0,0,0.6);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+    .count {
+      font-size: 3rem;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+    #reveal {
+      display: none;
+      margin-top: 20px;
+    }
+    video {
+      border-radius: 15px;
+      max-width: 100%;
+      height: auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
+    }
+  </style>
+</head>
+<body>
+ <div class="container">
+    <h1>💖 Your Special Day 💖</h1>
+    <div>Countdown</div>
+    <div id="count" class="count">00:00:00</div>
+    <p>When the clock hits 12:00 AM, the surprise will reveal itself 🥰</p>
+
+    <!-- Surprise area -->
+    <div id="revealCard">
+    <video id="video" controls>
+      <!-- Guna direct Google Drive link kat sini -->
+      <source src="https://github.com/SozaMegumi/birthday-surprise/raw/refs/heads/main/lv_7551049651613470005_20250918182230.mp4" type="video/mp4">
+      Your browser does not support video.
+    </video>
+    <div class="wish">
+      🎂 Happy Birthday, sayang! 💖 <br>
+      You make my world brighter every day. 🌙✨ <br>
+      Here’s to more laughter, love, and memories together. 💕
+    </div>
+  </div>
+
+  <script>
+    // 🎯 SET TARGET DATE (today midnight)
+    const targetDate = new Date();
+    targetDate.setHours(24, 0, 0, 0); // 12:00 AM next day
+
+    function updateCountdown() {
+      const now = new Date();
+      const distance = targetDate - now;
+
+      if (distance <= 0) {
+        clearInterval(intervalId);
+        document.getElementById("count").innerHTML = "00:00:00";
+        doReveal();
+        return;
+      }
+
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("count").innerHTML =
+        (hours < 10 ? "0" : "") + hours + ":" +
+        (minutes < 10 ? "0" : "") + minutes + ":" +
+        (seconds < 10 ? "0" : "") + seconds;
+    }
+
+    function doReveal() {
+      document.getElementById("reveal").style.display = "block";
+      const video = document.getElementById("video");
+      if (video) {
+        video.play().catch(err => console.log("Autoplay blocked:", err));
+      }
+    }
+
+    const intervalId = setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
