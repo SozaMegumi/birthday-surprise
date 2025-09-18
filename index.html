@@ -13,7 +13,6 @@
       align-items: center;
       justify-content: center;
       color: #fff;
-      overflow: hidden;
     }
     .container {
       text-align: center;
@@ -21,53 +20,46 @@
       padding: 30px;
       border-radius: 20px;
       box-shadow: 0 0 20px rgba(0,0,0,0.4);
-      max-width: 700px;
-      z-index: 2;
+      max-width: 900px;
+      width: 90%;
     }
     .count {
       font-size: 3rem;
       font-weight: bold;
       margin: 20px 0;
     }
-    #revealCard {
+    #reveal {
       display: none;
       margin-top: 20px;
     }
     video {
-  border-radius: 20px;
-  width: 70%;          /* besar tapi balance */
-  max-width: 800px;    /* limit max width */
-  max-height: 70vh;    /* responsive ikut tinggi screen */
-  object-fit: contain; /* jaga aspect ratio */
-  margin: 20px auto;   /* center */
-  display: block;
-  box-shadow: 0 0 20px rgba(0,0,0,0.7);
-}
-
-    .wish {
-      margin-top: 15px;
-      font-size: 1.2rem;
-      line-height: 1.5;
+      border-radius: 20px;
+      width: 60%;          /* kecilkan sikit supaya ada ruang bawah */
+      max-width: 700px;
+      max-height: 60vh;
+      object-fit: contain;
+      margin: 20px auto;
+      display: block;
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
     }
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      z-index: 1;
+    .wish {
+      font-size: 1.2rem;
+      margin-top: 20px;
+      line-height: 1.6;
+      color: #ffe6f2;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
     }
   </style>
 </head>
 <body>
- <canvas id="confettiCanvas"></canvas>
  <div class="container">
     <h1>💖 Your Special Day 💖</h1>
     <div>Countdown</div>
     <div id="count" class="count">00:00:00</div>
-    <p>When the countdown ends, the surprise will reveal itself 🥰</p>
+    <p>When the clock hits 12:00 AM, the surprise will reveal itself 🥰</p>
 
     <!-- Surprise area -->
-    <div id="revealCard">
+    <div id="reveal">
       <video id="video" controls>
         <source src="https://github.com/SozaMegumi/birthday-surprise/raw/refs/heads/main/lv_7551049651613470005_20250918182230.mp4" type="video/mp4">
         Your browser does not support video.
@@ -81,9 +73,9 @@
   </div>
 
   <script>
-    // 🎯 TEST MODE: set countdown 15s dari sekarang
+    // 🎯 Countdown to next 12:00 AM (today midnight)
     const targetDate = new Date();
-targetDate.setHours(0, 0, 0, 0); // hari ini pukul 12:00 AM
+    targetDate.setHours(24, 0, 0, 0); // 12:00 AM
 
     function updateCountdown() {
       const now = new Date();
@@ -107,82 +99,15 @@ targetDate.setHours(0, 0, 0, 0); // hari ini pukul 12:00 AM
     }
 
     function doReveal() {
-      document.getElementById("revealCard").style.display = "block";
+      document.getElementById("reveal").style.display = "block";
       const video = document.getElementById("video");
       if (video) {
         video.play().catch(err => console.log("Autoplay blocked:", err));
       }
-      startConfetti();
     }
 
     const intervalId = setInterval(updateCountdown, 1000);
     updateCountdown();
-
-    // 🎊 CONFETTI ANIMATION
-    const canvas = document.getElementById("confettiCanvas");
-    const ctx = canvas.getContext("2d");
-    let W = canvas.width = window.innerWidth;
-    let H = canvas.height = window.innerHeight;
-    window.addEventListener("resize", () => {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-    });
-
-    function random(min, max) { return Math.random() * (max - min) + min; }
-    class Confetto {
-      constructor() {
-        this.x = random(0, W);
-        this.y = random(-H, 0);
-        this.size = random(6, 12);
-        this.speed = random(1, 5);
-        this.angle = random(0, Math.PI * 2);
-        this.spin = random(-0.2, 0.2);
-        this.color = `hsl(${Math.floor(random(0, 360))},90%,60%)`;
-      }
-      update() {
-        this.y += this.speed;
-        this.x += Math.sin(this.angle) * 2;
-        this.angle += this.spin;
-        if (this.y > H + 20) {
-          this.y = random(-40, -10);
-          this.x = random(0, W);
-        }
-      }
-      draw() {
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle);
-        ctx.fillStyle = this.color;
-        ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size * 0.6);
-        ctx.restore();
-      }
-    }
-
-    let confetti = [];
-    let confettiAnimating = false;
-
-    function startConfetti(count = 100) {
-      confetti = [];
-      for (let i = 0; i < count; i++) confetti.push(new Confetto());
-      if (!confettiAnimating) {
-        confettiAnimating = true;
-        requestAnimationFrame(frame);
-        setTimeout(() => {
-          confettiAnimating = false;
-          confetti = [];
-          ctx.clearRect(0, 0, W, H);
-        }, 12000); // 🎊 confetti 12s
-      }
-    }
-
-    function frame() {
-      if (!confettiAnimating) return;
-      ctx.clearRect(0, 0, W, H);
-      for (let c of confetti) { c.update(); c.draw(); }
-      requestAnimationFrame(frame);
-    }
   </script>
 </body>
 </html>
-
-
