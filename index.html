@@ -2,104 +2,112 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday Surprise</title>
+  <title>🎉 Birthday Surprise 🎉</title>
   <style>
     body {
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      text-align: center;
-      background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
-      color: #333;
-      padding: 0;
       margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1a2a6c, #1d91de, #000000);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
     }
-    h1 {
-      font-size: 3em;
-      margin-top: 20px;
-      color: #ff4081;
-      text-shadow: 2px 2px #fff;
+    .container {
+      text-align: center;
+      background: rgba(0,0,0,0.6);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      max-width: 900px;
+      width: 90%;
     }
-    #countdown {
-      font-size: 2em;
+    .count {
+      font-size: 2.5rem;
+      font-weight: bold;
       margin: 20px 0;
-      color: #444;
     }
-    #video-section {
+    #reveal {
       display: none;
       margin-top: 20px;
     }
     video {
-      width: 60%;
-      max-width: 500px;
       border-radius: 15px;
-      box-shadow: 0px 4px 15px rgba(0,0,0,0.3);
+      width: 45%;          /* 👉 lagi kecilkan video */
+      max-width: 500px;
+      max-height: 50vh;
+      object-fit: contain;
+      margin: 20px auto;
+      display: block;
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
     }
-    #wishes {
+    .wish {
+      font-size: 1.3rem;
       margin-top: 15px;
-      font-size: 1.5em;
-      color: #222;
-    }
-    #playButton {
-      padding: 12px 25px;
-      font-size: 1.2em;
-      border: none;
-      border-radius: 25px;
-      background-color: #ff4081;
-      color: white;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    #playButton:hover {
-      background-color: #e91e63;
+      line-height: 1.6;
+      color: #ffe6f2;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
     }
   </style>
 </head>
 <body>
+ <div class="container">
+    <h1>💖 Your Special Day 💖</h1>
+    <div>Countdown</div>
+    <div id="count" class="count">00:00:00</div>
+    <p>When the clock hits 12:00 AM, the surprise will reveal itself 🥰</p>
 
-  <h1>🎉 Happy Birthday My Love 🎉</h1>
-  <div id="countdown"></div>
-
-  <div id="video-section">
-    <button id="playButton">💖 Click Here for Your Surprise 💖</button>
-    <br><br>
-    <video id="birthdayVideo" controls>
-      <source src="https://www.youtube.com/embed/K4DyBUG242c" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div id="wishes">💐 Wishing you the happiest birthday ever! 💐</div>
+    <!-- Surprise area -->
+    <div id="reveal">
+      <video id="video" controls>
+        <source src="https://github.com/SozaMegumi/birthday-surprise/raw/refs/heads/main/lv_7551049651613470005_20250918182230.mp4" type="video/mp4">
+        Your browser does not support video.
+      </video>
+      <div class="wish">
+        🎂 Happy Birthday, sayang! 💖 <br>
+        You make my world brighter every day. 🌙✨ <br>
+        Here’s to more laughter, love, and memories together. 💕
+      </div>
+    </div>
   </div>
 
   <script>
-    // Set countdown ke 12AM hari ni
-    const now = new Date();
-    const midnight = new Date();
-    midnight.setHours(24,0,0,0);
+    // 🎯 Countdown to next 12:00 AM (today midnight)
+    const targetDate = new Date();
+    targetDate.setHours(24, 0, 0, 0); // 12:00 AM
 
-    const countdownEl = document.getElementById("countdown");
-    const videoSection = document.getElementById("video-section");
+    function updateCountdown() {
+      const now = new Date();
+      const distance = targetDate - now;
 
-    const x = setInterval(function() {
-      const nowTime = new Date().getTime();
-      const distance = midnight - nowTime;
-
-      const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
-      const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
-      const seconds = Math.floor((distance % (1000*60)) / 1000);
-
-      countdownEl.innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
-
-      if (distance < 0) {
-        clearInterval(x);
-        countdownEl.style.display = "none";
-        videoSection.style.display = "block";
+      if (distance <= 0) {
+        clearInterval(intervalId);
+        document.getElementById("count").innerHTML = "00:00:00";
+        doReveal();
+        return;
       }
-    }, 1000);
 
-    // Play video bila tekan button
-    document.getElementById("playButton").addEventListener("click", () => {
-      document.getElementById("birthdayVideo").play();
-    });
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("count").innerHTML =
+        (hours < 10 ? "0" : "") + hours + ":" +
+        (minutes < 10 ? "0" : "") + minutes + ":" +
+        (seconds < 10 ? "0" : "") + seconds;
+    }
+
+    function doReveal() {
+      document.getElementById("reveal").style.display = "block";
+      const video = document.getElementById("video");
+      if (video) {
+        video.play().catch(err => console.log("Autoplay blocked:", err));
+      }
+    }
+
+    const intervalId = setInterval(updateCountdown, 1000);
+    updateCountdown();
   </script>
-
 </body>
 </html>
