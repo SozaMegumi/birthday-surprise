@@ -82,7 +82,8 @@
 
   <script>
     // 🎯 TEST MODE: set countdown 15s dari sekarang
-    const targetDate = new Date(new Date().getTime() + 15 * 1000);
+    const targetDate = new Date();
+targetDate.setHours(0, 0, 0, 0); // hari ini pukul 12:00 AM
 
     function updateCountdown() {
       const now = new Date();
@@ -183,4 +184,5 @@
   </script>
 </body>
 </html>
+
 
