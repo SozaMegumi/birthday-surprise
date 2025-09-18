@@ -34,11 +34,16 @@
       margin-top: 20px;
     }
     video {
-      border-radius: 15px;
-      max-width: 100%;
-      height: auto;
-      box-shadow: 0 0 15px rgba(0,0,0,0.7);
-    }
+  border-radius: 20px;
+  width: 70%;          /* besar tapi balance */
+  max-width: 800px;    /* limit max width */
+  max-height: 70vh;    /* responsive ikut tinggi screen */
+  object-fit: contain; /* jaga aspect ratio */
+  margin: 20px auto;   /* center */
+  display: block;
+  box-shadow: 0 0 20px rgba(0,0,0,0.7);
+}
+
     .wish {
       margin-top: 15px;
       font-size: 1.2rem;
@@ -178,3 +183,4 @@
   </script>
 </body>
 </html>
+
